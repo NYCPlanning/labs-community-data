@@ -37,6 +37,7 @@ function getCDData(borocd) {
     .then((json) => {
       console.log(`Received! Writing JSON to ${outputPath}/${borocd}.json`);  // eslint-disable-line
       const data = json.rows;
+
       fs.writeFileSync(`${outputPath}/${borocd}.json`, JSON.stringify(data));
       if (i < borocds.length - 1) {
         i += 1;
