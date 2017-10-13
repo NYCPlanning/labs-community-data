@@ -33,6 +33,7 @@ function getCDData(borocd) {
       if (response.ok) {
         return response.json();
       }
+      throw new Error('Network response was not ok.');
     })
     .then((json) => {
       console.log(`Received! Writing JSON to ${outputPath}/${borocd}.json`);  // eslint-disable-line
@@ -43,6 +44,9 @@ function getCDData(borocd) {
         i += 1;
         getCDData(borocds[i]);
       }
+    })
+    .catch(function(error) {
+      console.log('There has been a problem with your fetch operation: ' + error.message);
     });
 }
 
