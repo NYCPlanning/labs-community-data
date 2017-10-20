@@ -15,8 +15,8 @@ if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath);
 }
 
-const cartoUser = 'cpp';
-const cartoDomain = 'cartoprod.capitalplanning.nyc';
+const cartoUser = 'data';
+const cartoDomain = 'carto.planninglabs.nyc';
 
 const buildSqlUrl = (cleanedQuery, type = 'json') => { // eslint-disable-line
   return `https://${cartoDomain}/user/${cartoUser}/api/v2/sql?q=${cleanedQuery}&format=${type}`;
@@ -33,6 +33,8 @@ function getCDData(borocd) {
       if (response.ok) {
         return response.json();
       }
+
+      console.log(response);
       throw new Error('Network response was not ok.');
     })
     .then((json) => {
