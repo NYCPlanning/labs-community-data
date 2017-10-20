@@ -1,5 +1,5 @@
-module.exports = borocd => `
-  SELECT
+module.exports = borocd => 
+`SELECT
   SUM(numbldgs) as value,
   building_typology as group,
   ROUND(SUM(numbldgs)::numeric / NULLIF(propertytotal,0), 4) AS value_pct
@@ -7,7 +7,6 @@ module.exports = borocd => `
     SELECT
       numbldgs,
     CASE
-
       WHEN (unitsres < 3 AND unitsres > 0) AND (comarea = 0 AND officearea = 0 AND retailarea = 0 AND factryarea = 0) THEN '1-2 Family Homes'
       WHEN (unitsres < 6 AND unitsres > 2) AND (numfloors < 5) AND (comarea = 0 AND officearea = 0 AND retailarea = 0 AND factryarea = 0) THEN 'Small Apartments (<= 5 units, < 5 stories)'
       WHEN (unitsres >= 6 AND numfloors >= 5) AND (comarea = 0 AND officearea = 0 AND retailarea = 0 AND factryarea = 0) THEN 'Large Apartments (> 5 units, 5-plus stories)'
@@ -17,13 +16,11 @@ module.exports = borocd => `
       ELSE 'Public Facilities, Institutions, Other'
     END AS building_typology,
     SUM (numbldgs) OVER () as propertytotal
-    FROM support_mappluto a
-    INNER JOIN support_admin_cdboundaries b
-    ON ST_Contains(b.the_geom, a.the_geom)
-    AND b.borocd = '${borocd}'
-    INNER JOIN support_waterfront_pfirm15 c
-    ON ST_Intersects(a.the_geom, c.the_geom)
-    AND (fld_zone = 'AE' OR fld_zone = 'VE')
+    FROM (
+      SELECT a.*
+      FROM support_mappluto a, support_100year_floodplain c
+      WHERE a.cd = '${borocd}' AND ST_Intersects(ST_centroid(a.the_geom), c.the_geom)
+    ) a
   ) x
   GROUP BY building_typology, propertytotal
   ORDER BY SUM(numbldgs) DESC
