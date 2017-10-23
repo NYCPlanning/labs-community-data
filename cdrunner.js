@@ -28,7 +28,10 @@ const buildSqlUrl = (cleanedQuery, type = 'json') => { // eslint-disable-line
 };
 
 const buildJobOptions = (query) => {
-  const body = JSON.stringify({query});
+
+  const body = JSON.stringify({
+    query: `INSERT INTO job_result ${query.replace('\n', '')}`
+  });
 
   const headers = new Headers({
     "content-type": "application/json"
@@ -45,7 +48,6 @@ function getCDData(borocd) {
   const sql = getSQL(borocd);
   const cleanedQuery = sql.replace('\n', '');
   const options = buildJobOptions(cleanedQuery);
-
   console.log(`fetching data for borocd ${borocd}...`);  // eslint-disable-line
 
   fetch(url, options)
@@ -57,19 +59,21 @@ function getCDData(borocd) {
       throw new Error(`Network response was not ok. ${response.status} ${response.statusText}`);
     })
     .then((json) => {
-      console.log(`Received! Writing JSON to ${outputPath}/${borocd}.json`);  // eslint-disable-line
-      fetch(`https://carto.planninglabs.nyc/user/data/api/v2/sql?api_key=${process.env.CARTO_API_KEY}&q=select%20*%20%20from%20job_result`).then(response => {
-        return response.json();
-      })
-      .then(json => {
-        const data = json.rows;
+      console.log(json.job_id);
+      if (i < borocds.length - 1) {
+        i += 1;
+        getCDData(borocds[i]);
+      }
+      // console.log(`Received! Writing JSON to ${outputPath}/${borocd}.json`);  // eslint-disable-line
+      // fetch(`https://carto.planninglabs.nyc/user/data/api/v2/sql?api_key=${process.env.CARTO_API_KEY}&q=select%20*%20%20from%20job_result`).then(response => {
+      //   return response.json();
+      // })
+      // .then(json => {
+      //   const data = json.rows;
 
-        fs.writeFileSync(`${outputPath}/${borocd}.json`, JSON.stringify(data));
-        if (i < borocds.length - 1) {
-          i += 1;
-          getCDData(borocds[i]);
-        }
-      });
+      //   fs.writeFileSync(`${outputPath}/${borocd}.json`, JSON.stringify(data));
+
+      // });
     })
     .catch(function(error) {
       console.log(`There has been a problem with your fetch operation: ${error.message}`);

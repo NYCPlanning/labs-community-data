@@ -2,7 +2,8 @@ module.exports = borocd =>
 `SELECT
   SUM(numbldgs) as value,
   building_typology as group,
-  ROUND(SUM(numbldgs)::numeric / NULLIF(propertytotal,0), 4) AS value_pct
+  ROUND(SUM(numbldgs)::numeric / NULLIF(propertytotal,0), 4) AS value_pct,
+  ${borocd} AS borocd
   FROM (
     SELECT
       numbldgs,
