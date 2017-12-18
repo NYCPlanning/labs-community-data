@@ -15,11 +15,10 @@ if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath);
 }
 
-const cartoUser = 'data';
-const cartoDomain = 'carto.planninglabs.nyc';
+const cartoDomain = 'planninglabs.carto.com';
 
 const buildSqlUrl = (cleanedQuery, type = 'json') => { // eslint-disable-line
-  return `https://${cartoDomain}/user/${cartoUser}/api/v2/sql?q=${cleanedQuery}&format=${type}`;
+  return `https://${cartoDomain}/api/v2/sql?q=${cleanedQuery}&format=${type}`;
 };
 
 function getCDData(borocd) {
