@@ -9,3 +9,5 @@ Some complex spatial queries were taking a long time to process in real time on 
 
 The static JSON files are served by github at `https://raw.githubusercontent.com/NYCPlanning/labs-community-data/master/data/{id}/{borocd}.json`
 
+## Notes
+Currently, only the zoning file is being used in the front-end application. We plan to move that to a different format and archive this repo.
