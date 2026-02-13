@@ -2,7 +2,7 @@ const fs = require('fs');
 const fetch = require('node-fetch'); // eslint-disable-line
 const borocds = require('./borocds');
 
-const configName = process.argv[2];
+const configName = "zoning";
 
 const configPath = `./config/${configName}`;
 const getSQL = require(configPath); // eslint-disable-line
