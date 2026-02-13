@@ -1,7 +1,7 @@
 module.exports = borocd => `
   WITH zones as (
     SELECT ST_Intersection(ST_CollectionExtract(ST_MakeValid(a.the_geom),3), ST_CollectionExtract(ST_MakeValid(b.the_geom),3)) as the_geom, zonedist
-    FROM support_zoning_zd a, support_admin_cdboundaries b
+    FROM dcp_zoning_districts a, support_admin_cdboundaries b
     WHERE ST_intersects(ST_CollectionExtract(ST_MakeValid(a.the_geom),3), b.the_geom)
     AND b.borocd = '${borocd}'
   ),

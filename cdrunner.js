@@ -2,7 +2,7 @@ const fs = require('fs');
 const fetch = require('node-fetch'); // eslint-disable-line
 const borocds = require('./borocds');
 
-const configName = process.argv[2];
+const configName = "zoning";
 
 const configPath = `./config/${configName}`;
 const getSQL = require(configPath); // eslint-disable-line
@@ -40,7 +40,14 @@ function getCDData(borocd) {
       console.log(`Received! Writing JSON to ${outputPath}/${borocd}.json`);  // eslint-disable-line
       const data = json.rows;
 
-      fs.writeFileSync(`${outputPath}/${borocd}.json`, JSON.stringify(data));
+      var sortedData = [];
+      if(data.find((row) => row.zonedist === "R")) sortedData.push(data.find((row) => row.zonedist === "R"));
+      if(data.find((row) => row.zonedist === "B")) sortedData.push(data.find((row) => row.zonedist === "B"));
+      if(data.find((row) => row.zonedist === "M")) sortedData.push(data.find((row) => row.zonedist === "M"));
+      if(data.find((row) => row.zonedist === "C")) sortedData.push(data.find((row) => row.zonedist === "C"));
+      if(data.find((row) => row.zonedist === "P")) sortedData.push(data.find((row) => row.zonedist === "P"));
+
+      fs.writeFileSync(`${outputPath}/${borocd}.json`, JSON.stringify(sortedData));
       if (i < borocds.length - 1) {
         i += 1;
         getCDData(borocds[i]);
